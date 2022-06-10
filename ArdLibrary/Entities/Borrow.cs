@@ -5,7 +5,7 @@ namespace ArdLibrary.Entities
     public class Borrow
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int BookId { get; set; }
         public DateTime ExpDate { get; set; }
        
