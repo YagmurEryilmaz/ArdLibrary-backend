@@ -3,7 +3,7 @@ using ArdLibrary.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-/*namespace ArdLibrary.Controller
+namespace ArdLibrary.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,7 +23,7 @@ using Microsoft.EntityFrameworkCore;
         }
 
 
-        [HttpGet("getBorrowedBooks/{id}")]
+        //[HttpGet("getBorrowedBooks/{id}")]
         //public async Task<ActionResult<List<Borrow>>> getBorrowedBooks(int id)
         //{
         //    var borrowedBooks = await context.Books
@@ -36,4 +36,4 @@ using Microsoft.EntityFrameworkCore;
   
 
     }
-}*/
+}
