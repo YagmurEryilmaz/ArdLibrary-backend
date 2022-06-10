@@ -8,9 +8,7 @@ namespace ArdLibrary.Entities
         public int UserId { get; set; }
         public int BookId { get; set; }
         public DateTime ExpDate { get; set; }
-        public int AuthorName { get; set; } // bir kere foreignkey verirsen digerlerine erişebilirsin.
-
-        public int Title { get; set; }
+       
 
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
