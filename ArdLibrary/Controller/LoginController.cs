@@ -19,8 +19,7 @@ namespace ArdLibrary.Controller
         readonly DataContext context;
         readonly IConfiguration configuration;
         string key = "ardLibrary";
-        byte[] passwordHash, passwordSalt;
-
+     
         public LoginController(DataContext context, IConfiguration configuration)
 		{
             this.configuration = configuration;
@@ -30,14 +29,14 @@ namespace ArdLibrary.Controller
         [HttpPost("action")]
         public async Task<LoginResponseDto> Login([FromBody] LoginDto loginDto)
         {
-            User user = await context.Users.FirstOrDefaultAsync(x => x.Id == loginDto.Id && x.Password ==loginDto.Password);
+            User user = await context.Users.FirstOrDefaultAsync(x => x.Email == loginDto.Email && x.Password ==loginDto.Password);
             if (user != null)
             {
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
                 //create token
                 JwtAuthenticationManager jwtAuthenticationManager = new JwtAuthenticationManager(key);
-                loginResponseDto.AccessToken = jwtAuthenticationManager.Authenticate(user.Id.ToString());
-                loginResponseDto.UserDto.Id = loginDto.Id;
+                loginResponseDto.AccessToken = jwtAuthenticationManager.Authenticate(user.Email);
+                loginResponseDto.UserDto.Email = loginDto.Email;
    
                 return loginResponseDto;
             }
