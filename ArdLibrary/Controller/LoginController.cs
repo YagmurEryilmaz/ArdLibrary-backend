@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ArdLibrary.Data;
 using ArdLibrary.Dto;
 using ArdLibrary.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,7 @@ namespace ArdLibrary.Controller
             this.context = context;
 		}
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult<LoginResponseDto> Login(LoginDto loginDto)
         {
