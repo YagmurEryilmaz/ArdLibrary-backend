@@ -4,6 +4,10 @@ namespace ArdLibrary.Entities
 {
     public class User
     {
+        public User()
+        {
+            Borrows = new List<Borrow>();
+        }
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }

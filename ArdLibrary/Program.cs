@@ -12,10 +12,7 @@ var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-});
+
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -46,7 +43,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-var key = "ardLibrary";
+var key = "ardLibraryghhfghfhfghr";
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,7 +58,6 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
         ValidateIssuer = false,
         ValidateAudience = false
-
     };
 });
 
@@ -84,8 +80,11 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
         });
 });
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
 // Add services to the container.
-builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -107,11 +106,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors();
+app.UseAuthentication();
 
-app.MapRazorPages();
+app.UseCors();
+app.MapControllers();
 
 app.Run();

@@ -18,7 +18,7 @@ namespace ArdLibrary.Controller
 	{
         readonly DataContext context;
         readonly IConfiguration configuration;
-        string key = "ardLibrary";
+        string key = "ardLibraryghhfghfhfghr";
      
         public LoginController(DataContext context, IConfiguration configuration)
 		{
@@ -26,13 +26,14 @@ namespace ArdLibrary.Controller
             this.context = context;
 		}
 
-        [HttpPost("action")]
-        public async Task<LoginResponseDto> Login([FromBody] LoginDto loginDto)
+        [HttpPost]
+        public ActionResult<LoginResponseDto> Login(LoginDto loginDto)
         {
-            User user = await context.Users.FirstOrDefaultAsync(x => x.Email == loginDto.Email && x.Password ==loginDto.Password);
+            User user = context.Users.FirstOrDefault(x => x.Email == loginDto.Email && x.Password ==loginDto.Password);
             if (user != null)
             {
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
+                loginResponseDto.UserDto= new UserDto();
                 //create token
                 JwtAuthenticationManager jwtAuthenticationManager = new JwtAuthenticationManager(key);
                 loginResponseDto.AccessToken = jwtAuthenticationManager.Authenticate(user.Email);
@@ -41,6 +42,14 @@ namespace ArdLibrary.Controller
                 return loginResponseDto;
             }
             return null;
+
+        }
+
+        [HttpGet("getTest")]
+        public IActionResult getTest ()
+        {
+
+            return Ok();
 
         }
 

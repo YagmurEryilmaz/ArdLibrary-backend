@@ -1,5 +1,6 @@
 ﻿using ArdLibrary.Data;
 using ArdLibrary.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace ArdLibrary.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BookController
     {
         private readonly DataContext context;
