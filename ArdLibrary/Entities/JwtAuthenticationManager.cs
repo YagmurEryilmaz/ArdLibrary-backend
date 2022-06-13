@@ -17,7 +17,7 @@ namespace ArdLibrary.Entities
 			this.key = key;
 		}
 
-		public string Authenticate(string studentNumber)
+		public string Authenticate(string email)
         {
 			JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 			var tokenKey = Encoding.ASCII.GetBytes(key);
@@ -26,7 +26,7 @@ namespace ArdLibrary.Entities
 			{
 				Subject = new ClaimsIdentity(new Claim[]
 				{
-						new Claim(ClaimTypes.Name, studentNumber)
+						new Claim(ClaimTypes.Email, email)
 				}),
 
 				Expires = DateTime.UtcNow.AddHours(1),
