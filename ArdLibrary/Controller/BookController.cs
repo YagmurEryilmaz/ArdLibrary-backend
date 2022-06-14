@@ -8,7 +8,6 @@ namespace ArdLibrary.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class BookController
     {
         private readonly DataContext context;

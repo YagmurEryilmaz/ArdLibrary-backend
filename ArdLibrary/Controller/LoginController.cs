@@ -15,7 +15,7 @@ namespace ArdLibrary.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LoginController:ControllerBase
+    public class LoginController:BaseController
 	{
         readonly DataContext context;
         readonly IConfiguration configuration;
@@ -35,12 +35,11 @@ namespace ArdLibrary.Controller
             if (user != null)
             {
                 LoginResponseDto loginResponseDto = new LoginResponseDto();
-                loginResponseDto.UserDto= new UserDto();
                 //create token
                 JwtAuthenticationManager jwtAuthenticationManager = new JwtAuthenticationManager(key);
-                loginResponseDto.AccessToken = jwtAuthenticationManager.Authenticate(user.Email);
-                loginResponseDto.UserDto.Email = loginDto.Email;
-   
+                loginResponseDto.AccessToken = jwtAuthenticationManager.Authenticate(user);
+        
+
                 return loginResponseDto;
             }
             return null;

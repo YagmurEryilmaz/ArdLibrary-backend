@@ -4,6 +4,7 @@ namespace ArdLibrary.Entities
 {
     public class Book
     {
+        
         [Key] // otomatik olarak identity yapmak için
         public int Id { get; set; }
         public string Title { get; set; }
@@ -12,6 +13,6 @@ namespace ArdLibrary.Entities
         public string Genre { get; set; }
         public string Language { get; set; }
         public bool IsBorrowed { get; set; }
-        public virtual IEnumerable<Borrow> Borrows { get; set; }
+  
     }
 }
