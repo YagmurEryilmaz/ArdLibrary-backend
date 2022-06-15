@@ -4,6 +4,7 @@ using ArdLibrary.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArdLibrary.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220613082812_user")]
+    partial class user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,10 +40,6 @@ namespace ArdLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsBorrowed")
                         .HasColumnType("bit");
 
@@ -51,10 +49,6 @@ namespace ArdLibrary.Migrations
 
                     b.Property<int>("PublishYear")
                         .HasColumnType("int");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -119,13 +113,13 @@ namespace ArdLibrary.Migrations
             modelBuilder.Entity("ArdLibrary.Entities.Borrow", b =>
                 {
                     b.HasOne("ArdLibrary.Entities.Book", "Book")
-                        .WithMany()
+                        .WithMany("Borrows")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ArdLibrary.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Borrows")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -133,6 +127,16 @@ namespace ArdLibrary.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ArdLibrary.Entities.Book", b =>
+                {
+                    b.Navigation("Borrows");
+                });
+
+            modelBuilder.Entity("ArdLibrary.Entities.User", b =>
+                {
+                    b.Navigation("Borrows");
                 });
 #pragma warning restore 612, 618
         }
