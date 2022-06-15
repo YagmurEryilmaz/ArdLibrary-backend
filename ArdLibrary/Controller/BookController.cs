@@ -23,6 +23,15 @@ namespace ArdLibrary.Controller
             return await context.Books.ToListAsync();
         }
 
+        [HttpGet("GetBookById/{id}")]
+        public async Task<ActionResult<List<Book>>> GetBookById(int id)
+        {
+            var bookList = await context.Books.Where(b => b.Id == id).ToListAsync();
+
+
+            return bookList;
+        }
+
 
         //[HttpGet("getBorrowedBooks/{id}")]
         //public async Task<ActionResult<List<Borrow>>> getBorrowedBooks(int id)
@@ -34,7 +43,7 @@ namespace ArdLibrary.Controller
         //    //    .OrderBy(x => x.Order).ToListAsync();
         //    //return titles;
         //}
-  
+
 
     }
 }
