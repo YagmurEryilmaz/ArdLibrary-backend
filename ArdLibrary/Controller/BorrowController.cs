@@ -75,6 +75,24 @@ namespace ArdLibrary.Controller
             return borrowedBooksList;
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBorrowedBook(int id)
+        {
+            
+                var borrowedBook = await context.Borrows.FindAsync(id);
+                if (borrowedBook == null)
+                {
+                    return NotFound();
+                }
+
+                context.Borrows.Remove(borrowedBook);
+                await context.SaveChangesAsync();
+
+                return NoContent();
+
+        }
+
+
     }
 
 
