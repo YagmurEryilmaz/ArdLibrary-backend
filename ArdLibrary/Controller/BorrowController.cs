@@ -36,7 +36,7 @@ namespace ArdLibrary.Controller
 
 
             context.Borrows.Add(borrowedBook);
-             context.SaveChanges();
+            context.SaveChanges();
             return borrowedBook;
         }
 
@@ -44,7 +44,6 @@ namespace ArdLibrary.Controller
         public IActionResult AddBorrowedBook([FromBody] BorrowAddDto borrowAddDto)
         {
       
-
             var borrowedBook = this.AddToBorrowed(borrowAddDto);
 
             if(borrowedBook==null)
@@ -60,11 +59,20 @@ namespace ArdLibrary.Controller
         }
   
 
-        // GET: api/BorrowedBooks
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Borrow>>> GetBorrowedBooks()
         {
             return await context.Borrows.Include(x=>x.Book).Include(x=>x.User).ToListAsync();
+        }
+
+
+        [HttpGet("GetBorrowedBooksById/{id}")]
+        public async Task<ActionResult<List<Borrow>>> GetBorrowedBooksById(int id)
+        {
+            var borrowedBooksList = await context.Borrows.Where(b => b.UserId == id).Include(x => x.Book).Include(x => x.User).ToListAsync();
+
+
+            return borrowedBooksList;
         }
 
     }
