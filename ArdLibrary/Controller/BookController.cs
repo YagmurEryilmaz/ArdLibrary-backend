@@ -24,12 +24,12 @@ namespace ArdLibrary.Controller
         }
 
         [HttpGet("GetBookById/{id}")]
-        public async Task<ActionResult<List<Book>>> GetBookById(int id)
+        public async Task<ActionResult<Book>> GetBookById(int id)
         {
-            var bookList = await context.Books.Where(b => b.Id == id).ToListAsync();
+            var book = await context.Books.FindAsync(id);
 
 
-            return bookList;
+            return book;
         }
 
 
