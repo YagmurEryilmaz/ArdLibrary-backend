@@ -29,14 +29,14 @@ namespace ArdLibrary.Controller
 
             var borrowedBook = new Borrow()
             {
-                UserId = GetUserId(),
+                UserId = borrowDto.UserId,
                 BookId = borrowDto.BookId,
                 ExpDate = borrowDto.ExpDate
 
             };
 
             var book = context.Books.FirstOrDefault(b => b.Id == borrowDto.BookId);
-            book.IsBorrowed = false;
+            book.IsBorrowed = true;
 
             context.Books.Update(book);
             context.Borrows.Add(borrowedBook);
@@ -92,7 +92,7 @@ namespace ArdLibrary.Controller
 
 
             var book = context.Books.FirstOrDefault(b => b.Id == id);
-            book.IsBorrowed = true;
+            book.IsBorrowed = false;
 
             context.Books.Update(book);
             context.Borrows.Remove(borrow);
