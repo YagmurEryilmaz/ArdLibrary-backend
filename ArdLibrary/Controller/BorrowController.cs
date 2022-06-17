@@ -29,7 +29,7 @@ namespace ArdLibrary.Controller
 
             var borrowedBook = new Borrow()
             {
-                UserId = borrowDto.UserId,
+                UserId = GetUserId(),
                 BookId = borrowDto.BookId,
                 ExpDate = borrowDto.ExpDate
 
