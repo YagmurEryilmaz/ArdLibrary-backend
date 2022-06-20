@@ -1,4 +1,5 @@
 ﻿using ArdLibrary.Data;
+using ArdLibrary.Dto;
 using ArdLibrary.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,11 @@ namespace ArdLibrary.Controller
             this.context = context;
         }
 
-        // GET: api/Books
+  
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
         {
-            return await context.Books.ToListAsync();
+            return await context.Books.OrderBy(x=>x.Title).ToListAsync();
         }
 
         [HttpGet("GetBookById/{id}")]
@@ -32,18 +33,50 @@ namespace ArdLibrary.Controller
             return book;
         }
 
+        [HttpGet]
+        public async List<String> GetAllGenre()
+        {
+            var books = await context.Books.ToListAsync();
+            foreach (Book element in books)
+            {
+                return element.Genre;
+            }
 
-        //[HttpGet("getBorrowedBooks/{id}")]
-        //public async Task<ActionResult<List<Borrow>>> getBorrowedBooks(int id)
-        //{
-        //    var borrowedBooks = await context.Books
-        //    //    .Where(e => e.Id == id)
-        //    //    .Include(x => x.User)
-        //    //    .Select(x => x.Title)
-        //    //    .OrderBy(x => x.Order).ToListAsync();
-        //    //return titles;
-        //}
+        }
 
+        [HttpGet("Filter")]
+        public IQueryable<Book> GetFilteredBooks([FromQuery] FilteredBook filteredBook)
+        {
+            var result = context.Books.AsQueryable();
+            if (filteredBook != null)
+            {
+                if (filteredBook.AuthorName != null)
+                    result = result.Where(x => x.AuthorName == filteredBook.AuthorName);
+                if (filteredBook.Genre != null)
+                    result = result.Where(x => x.Genre == filteredBook.Genre);
+                if (filteredBook.Language != null)
+                    result = result.Where(x => x.Language == filteredBook.Language);
+                if (filteredBook.PublishYear != null)
+                    result = result.Where(x => x.PublishYear == filteredBook.PublishYear);
+
+            }
+            return result;
+        }
 
     }
+
+
+    //[HttpGet("getBorrowedBooks/{id}")]
+    //public async Task<ActionResult<List<Borrow>>> getBorrowedBooks(int id)
+    //{
+    //    var borrowedBooks = await context.Books
+    //    //    .Where(e => e.Id == id)
+    //    //    .Include(x => x.User)
+    //    //    .Select(x => x.Title)
+    //    //    .OrderBy(x => x.Order).ToListAsync();
+    //    //return titles;
+    //}
+
+
 }
+

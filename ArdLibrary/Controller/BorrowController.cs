@@ -37,7 +37,7 @@ namespace ArdLibrary.Controller
 
             var book = context.Books.FirstOrDefault(b => b.Id == borrowDto.BookId);
             book.IsBorrowed = true;
-
+ 
             context.Books.Update(book);
             context.Borrows.Add(borrowedBook);
             context.SaveChanges();
@@ -80,6 +80,10 @@ namespace ArdLibrary.Controller
             return borrowedBooksList;
         }
 
+
+
+
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBorrowedBook(int id)
         {
@@ -92,10 +96,12 @@ namespace ArdLibrary.Controller
 
 
             var book = context.Books.FirstOrDefault(b => b.Id == id);
+    
             book.IsBorrowed = false;
+            borrow.ExpDate = DateTime.Now.AddDays(-7);
 
             context.Books.Update(book);
-            context.Borrows.Remove(borrow);
+            context.Borrows.Update(borrow);
                 await context.SaveChangesAsync();
 
                 return NoContent();
