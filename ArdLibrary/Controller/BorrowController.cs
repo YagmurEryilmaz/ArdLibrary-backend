@@ -29,7 +29,7 @@ namespace ArdLibrary.Controller
 
             var borrowedBook = new Borrow()
             {
-                UserId = GetUserId(),
+                UserId = borrowDto.UserId,
                 BookId = borrowDto.BookId,
                 ExpDate = borrowDto.ExpDate
 
@@ -39,7 +39,9 @@ namespace ArdLibrary.Controller
             book.IsBorrowed = true;
  
             context.Books.Update(book);
+            context.Borrows.Update(borrowedBook);
             context.Borrows.Add(borrowedBook);
+            
             context.SaveChanges();
             return borrowedBook;
         }
@@ -89,21 +91,29 @@ namespace ArdLibrary.Controller
         {
             
                 var borrow = await context.Borrows.FirstOrDefaultAsync(b=>b.BookId== id);
-                var prevBorrow = await context.PrevBorrows.FirstOrDefaultAsync(b => b.BookId == id);
-               if (borrow == null || prevBorrow ==null)
+
+               if (borrow == null)
                 {
                     return NotFound();
                 }
 
+            var prevBorrowedBook = new PrevBorrow()
+            {
+                UserId = borrow.UserId,
+                BookId = id,
+                ExpDate = borrow.ExpDate
+
+            };
 
             var book = context.Books.FirstOrDefault(b => b.Id == id);
-    
             book.IsBorrowed = false;
-            borrow.ExpDate = DateTime.Now.AddDays(-7);
+            borrow.ExpDate = DateTime.Now.AddDays(-3);
+            prevBorrowedBook.ExpDate = DateTime.Now.AddDays(-3);
+
 
             context.Books.Update(book);
             context.Borrows.Update(borrow);
-            context.PrevBorrows.Add(prevBorrow);
+            context.PrevBorrows.Add(prevBorrowedBook);
             context.Borrows.Remove(borrow);
           
                 await context.SaveChangesAsync();

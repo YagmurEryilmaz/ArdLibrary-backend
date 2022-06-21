@@ -36,6 +36,9 @@ namespace ArdLibrary.Controller
 
             };
 
+            var book = context.Books.FirstOrDefault(b => b.Id == borrowDto.BookId);
+            book.IsBorrowed = false;
+
             context.PrevBorrows.Add(prevBorrowedBook);
             context.SaveChanges();
             return prevBorrowedBook;
