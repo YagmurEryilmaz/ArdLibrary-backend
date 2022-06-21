@@ -49,18 +49,25 @@ namespace ArdLibrary.Controller
         [HttpPost]
         public IActionResult AddBorrowedBook([FromBody] BorrowAddDto borrowAddDto)
         {
+
+            var count = context.Borrows.Count(r => r.UserId == borrowAddDto.UserId && r.ExpDate > DateTime.Today);
       
+    
+            if(count >= 5)
+            {
+                return BadRequest("You cannot borrow more than 5 books");
+            }
             var borrowedBook = this.AddToBorrowed(borrowAddDto);
 
-            if(borrowedBook==null)
+            if (borrowedBook==null)
             {
                 return BadRequest("Book is already Borrowed");
             }
 
             BorrowDto borrowDto = new BorrowDto();
             borrowDto.Id = borrowedBook.Id;
-      
 
+           
             return Ok(borrowDto);
            
         }
