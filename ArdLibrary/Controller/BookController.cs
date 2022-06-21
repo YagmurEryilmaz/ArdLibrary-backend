@@ -45,7 +45,7 @@ namespace ArdLibrary.Controller
         }*/
 
         [HttpGet("Filter")]
-        public IQueryable<Book> GetFilteredBooks([FromQuery] FilteredBook filteredBook)
+        public IQueryable<Book> GetFilteredBooks([FromQuery] FilterDto filteredBook)
         {
             var result = context.Books.AsQueryable();
             if (filteredBook != null)

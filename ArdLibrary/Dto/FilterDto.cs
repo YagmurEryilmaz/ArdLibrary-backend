@@ -1,7 +1,7 @@
 ﻿using System;
 namespace ArdLibrary.Dto
 {
-	public class FilteredBook
+	public class FilterDto
 	{
 		public string? AuthorName { get; set; }
 		public int? PublishYear { get; set; }
