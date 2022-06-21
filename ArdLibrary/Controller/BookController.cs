@@ -33,7 +33,7 @@ namespace ArdLibrary.Controller
             return book;
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async List<String> GetAllGenre()
         {
             var books = await context.Books.ToListAsync();
@@ -42,7 +42,7 @@ namespace ArdLibrary.Controller
                 return element.Genre;
             }
 
-        }
+        }*/
 
         [HttpGet("Filter")]
         public IQueryable<Book> GetFilteredBooks([FromQuery] FilteredBook filteredBook)

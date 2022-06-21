@@ -89,7 +89,8 @@ namespace ArdLibrary.Controller
         {
             
                 var borrow = await context.Borrows.FirstOrDefaultAsync(b=>b.BookId== id);
-            if (borrow == null)
+                var prevBorrow = await context.PrevBorrows.FirstOrDefaultAsync(b => b.BookId == id);
+               if (borrow == null || prevBorrow ==null)
                 {
                     return NotFound();
                 }
@@ -102,6 +103,9 @@ namespace ArdLibrary.Controller
 
             context.Books.Update(book);
             context.Borrows.Update(borrow);
+            context.PrevBorrows.Add(prevBorrow);
+            context.Borrows.Remove(borrow);
+          
                 await context.SaveChangesAsync();
 
                 return NoContent();
