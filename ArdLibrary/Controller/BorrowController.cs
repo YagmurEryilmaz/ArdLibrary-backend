@@ -52,7 +52,6 @@ namespace ArdLibrary.Controller
 
             var count = context.Borrows.Count(r => r.UserId == borrowAddDto.UserId && r.ExpDate > DateTime.Today);
       
-    
             if(count >= 5)
             {
                 return BadRequest("You cannot borrow more than 5 books");

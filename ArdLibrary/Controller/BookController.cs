@@ -33,29 +33,20 @@ namespace ArdLibrary.Controller
             return book;
         }
 
-        /*[HttpGet]
-        public async List<String> GetAllGenre()
-        {
-            var books = await context.Books.ToListAsync();
-            foreach (Book element in books)
-            {
-                return element.Genre;
-            }
-
-        }*/
 
         [HttpGet("Filter")]
         public IQueryable<Book> GetFilteredBooks([FromQuery] FilterDto filteredBook)
         {
+
             var result = context.Books.AsQueryable();
             if (filteredBook != null)
             {
                 if (filteredBook.AuthorName != null)
-                    result = result.Where(x => x.AuthorName == filteredBook.AuthorName);
+                    result = result.Where(x => x.AuthorName.Contains(filteredBook.AuthorName));
                 if (filteredBook.Genre != null)
-                    result = result.Where(x => x.Genre == filteredBook.Genre);
+                    result = result.Where(x => x.Genre.Contains(filteredBook.Genre));
                 if (filteredBook.Language != null)
-                    result = result.Where(x => x.Language == filteredBook.Language);
+                    result = result.Where(x => x.Language.Contains(filteredBook.Language));
                 if (filteredBook.PublishYear != null)
                     result = result.Where(x => x.PublishYear == filteredBook.PublishYear);
 
