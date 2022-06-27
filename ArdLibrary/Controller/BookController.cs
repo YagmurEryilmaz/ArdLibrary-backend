@@ -53,14 +53,14 @@ namespace ArdLibrary.Controller
             return result;
         }
 
-        private Book AddBook(BookDto bookDto)
+        private async Task<Book> AddBook(BookDto bookDto)
         {
-            var isFound = context.Books.Any(s => s.Title== bookDto.Title);
+            //var isFound = await context.Books.AnyAsync(s => s.Title== bookDto.Title);
 
-            if (isFound == true)
-            {
-                return null;
-            }
+            //if (isFound == true)
+            //{
+                //return null;
+            //}
 
             var book = new Book()
             {
@@ -72,10 +72,17 @@ namespace ArdLibrary.Controller
                 PublishYear =bookDto.PublishYear
             };
 
-            //context.Books.Update(book);
-            context.Books.Add(book);
-            //context.Books.Update(book);
-            context.SaveChanges();
+            try
+            {
+                context.Books.Add(book);
+
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+   
 
             return book;
         }
@@ -99,6 +106,35 @@ namespace ArdLibrary.Controller
             return Ok(borrowDto);
 
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+
+            var book = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                 context.Books.Remove(book);
+
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+
+            }
+        
+
+            return NoContent();
+
+        }
+
 
     }
 

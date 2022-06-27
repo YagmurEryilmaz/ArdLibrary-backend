@@ -20,7 +20,7 @@ namespace ArdLibrary.Controller
 
         private Borrow AddToBorrowed(BorrowAddDto borrowDto)
         {
-            var isBorrowed =  context.Borrows.Any(s=> s.ExpDate.AddDays(+2) < DateTime.Now && s.BookId == borrowDto.BookId && s.UserId == borrowDto.UserId);
+            var isBorrowed =  context.Borrows.Any(s=> s.ExpDate > DateTime.Now.AddDays(-2) && s.BookId == borrowDto.BookId && s.UserId == borrowDto.UserId);
 
             if (isBorrowed == true)
             {
@@ -49,30 +49,32 @@ namespace ArdLibrary.Controller
         [HttpPost]
         public IActionResult AddBorrowedBook([FromBody] BorrowAddDto borrowAddDto)
         {
+            var count = context.Borrows.Count(r => r.UserId == borrowAddDto.UserId && r.ExpDate > DateTime.Now.AddDays(-2));
 
-            var count = context.Borrows.Count(r => r.UserId == borrowAddDto.UserId && r.ExpDate.AddDays(+2) < DateTime.Now && r.BookId== borrowAddDto.BookId);
-      
-            if(count >= 5)
+            if (count >= 5)
             {
                 return BadRequest("You cannot borrow more than 5 books");
             }
-            var borrowedBook = this.AddToBorrowed(borrowAddDto);
-
-            if (borrowedBook==null)
+            else
             {
-                return BadRequest("Book is already Borrowed");
+                var borrowedBook = this.AddToBorrowed(borrowAddDto);
+
+                if (borrowedBook == null)
+                {
+                    return BadRequest("Book is already Borrowed");
+                }
+
+                BorrowDto borrowDto = new BorrowDto();
+                borrowDto.Id = borrowedBook.Id;
+
+
+                return Ok(borrowDto);
             }
-
-            BorrowDto borrowDto = new BorrowDto();
-            borrowDto.Id = borrowedBook.Id;
-
-           
-            return Ok(borrowDto);
            
         }
   
 
-        [HttpGet]
+        [HttpGet("getBorrowedBooks")]
         public async Task<ActionResult<IEnumerable<Borrow>>> GetBorrowedBooks()
         {
             return await context.Borrows.Include(x=>x.Book).Include(x=>x.User).ToListAsync();
