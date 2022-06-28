@@ -35,14 +35,20 @@ namespace ArdLibrary.Controller
 
             };
 
-            //var book = context.Books.FirstOrDefault(b => b.Id == borrowDto.BookId);
-            //book.IsBorrowed = true;
- 
-            //context.Books.Update(book);
-            //context.Borrows.Update(borrowedBook);
-            context.Borrows.Add(borrowedBook);
-            
-            context.SaveChanges();
+            var book = context.Books.FirstOrDefault(b => b.Id == borrowDto.BookId);
+            book.IsBorrowed = true;
+
+            context.Books.Update(book);
+         
+            try {
+                context.Borrows.Add(borrowedBook);
+
+                context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
             return borrowedBook;
         }
 
@@ -108,8 +114,15 @@ namespace ArdLibrary.Controller
         [HttpGet("GetBorrowDate/{id}")]
         public async Task<ActionResult<List<DateTime>>> GetBorrrowDate(int id)
         {
-            var prevBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate < DateTime.Now.AddDays(-2)).Select(e => e.ExpDate.AddDays(+3)).ToListAsync();
+            var prevBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate < DateTime.Now.AddDays(-2)).Select(e => e.ExpDate.AddDays(+3).ToLocalTime()).ToListAsync();
             return prevBorrowedBooksList;
+        }
+
+        [HttpGet("GetRealExpDate/{id}")]
+        public async Task<ActionResult<List<DateTime>>> GetRealExpDate(int id)
+        {
+            var currBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate > DateTime.Now.AddDays(-2)).Select(e => e.ExpDate.AddDays(+7).ToLocalTime()).ToListAsync();
+            return currBorrowedBooksList;
         }
 
 
