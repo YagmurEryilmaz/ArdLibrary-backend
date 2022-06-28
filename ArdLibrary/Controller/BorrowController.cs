@@ -104,6 +104,15 @@ namespace ArdLibrary.Controller
             return prevBorrowedBooksList;
         }
 
+
+        [HttpGet("GetBorrowDate/{id}")]
+        public async Task<ActionResult<List<DateTime>>> GetBorrrowDate(int id)
+        {
+            var prevBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate < DateTime.Now.AddDays(-2)).Select(e => e.ExpDate.AddDays(+3)).ToListAsync();
+            return prevBorrowedBooksList;
+        }
+
+
         [HttpGet("GetCurrentlyBorrowedBooksById/{id}")]
         public async Task<ActionResult<List<Borrow>>> GetCurrentBooksById(int id)
         {
@@ -131,25 +140,13 @@ namespace ArdLibrary.Controller
                     return NotFound();
                 }
 
-            /*var prevBorrowedBook = new PrevBorrow()
-            {
-                UserId = borrow.UserId,
-                BookId = id,
-                ExpDate = borrow.ExpDate
-
-            };*/
 
             var book = context.Books.FirstOrDefault(b => b.Id == id);
             book.IsBorrowed = false;
             borrow.ExpDate = DateTime.Now.AddDays(-3);
-            //prevBorrowedBook.ExpDate = DateTime.Now.AddDays(-3);
-
 
             context.Books.Update(book);
             context.Borrows.Update(borrow);
-            //context.PrevBorrows.Add(prevBorrowedBook);
-            //context.Borrows.Remove(borrow);
-          
                 await context.SaveChangesAsync();
 
                 return NoContent();

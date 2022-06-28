@@ -55,12 +55,12 @@ namespace ArdLibrary.Controller
 
         private async Task<Book> AddBook(BookDto bookDto)
         {
-            //var isFound = await context.Books.AnyAsync(s => s.Title== bookDto.Title);
+            /*var isFound = await context.Books.AnyAsync(s => s.Title== bookDto.Title);
 
-            //if (isFound == true)
-            //{
-                //return null;
-            //}
+            if (isFound == true)
+            {
+                return null;
+            }*/
 
             var book = new Book()
             {
@@ -74,13 +74,17 @@ namespace ArdLibrary.Controller
 
             try
             {
-                context.Books.Add(book);
+
+                context.Borrows.Add(new Borrow { UserId = 2, BookId = 51, ExpDate = DateTime.Now });
+
+                //context.Books.Add(book);
+                //context.Books.Update(book);
 
                 await context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-
+                throw new Exception(ex.Message);
             }
    
 
@@ -91,19 +95,45 @@ namespace ArdLibrary.Controller
         public IActionResult AddNewBook([FromBody] BookDto bookDto)
         {
 
-      
-            var book = this.AddBook(bookDto);
-
             if (bookDto == null)
             {
                 return BadRequest("Error");
             }
 
-            BorrowDto borrowDto = new BorrowDto();
+            //var book = this.AddBook(bookDto);
+            var book = new Book()
+            {
+                Title = bookDto.Title,
+                AuthorName = bookDto.AuthorName,
+                IsBorrowed = bookDto.IsBorrowed,
+                ImageUrl = bookDto.ImageUrl,
+                Subject = bookDto.Subject,
+                PublishYear = bookDto.PublishYear
+            };
+            var borrow = new Borrow()
+            {
+               UserId=2,
+               BookId=51,
+               ExpDate=DateTime.Now
+            };
+
             bookDto.Id = book.Id;
+            //BorrowDto borrowDto = new BorrowDto();
+            //borrow.Id = borrowDto.Id;
 
 
-            return Ok(borrowDto);
+            try
+            { 
+            //context.Books.Add(book);
+             context.Borrows.Add(borrow);
+                context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return Ok(bookDto);
 
         }
 
@@ -130,7 +160,6 @@ namespace ArdLibrary.Controller
 
             }
         
-
             return NoContent();
 
         }
