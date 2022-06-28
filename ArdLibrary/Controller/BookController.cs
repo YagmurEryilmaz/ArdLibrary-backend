@@ -53,82 +53,41 @@ namespace ArdLibrary.Controller
             return result;
         }
 
-        private async Task<Book> AddBook(BookDto bookDto)
-        {
-            /*var isFound = await context.Books.AnyAsync(s => s.Title== bookDto.Title);
-
-            if (isFound == true)
-            {
-                return null;
-            }*/
-
-            var book = new Book()
-            {
-                Title = bookDto.Title,
-                AuthorName = bookDto.AuthorName,
-                IsBorrowed = bookDto.IsBorrowed,
-                ImageUrl = bookDto.ImageUrl,
-                Subject = bookDto.Subject,
-                PublishYear =bookDto.PublishYear
-            };
-
-            try
-            {
-
-                context.Borrows.Add(new Borrow { UserId = 2, BookId = 51, ExpDate = DateTime.Now });
-
-                //context.Books.Add(book);
-                //context.Books.Update(book);
-
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-   
-
-            return book;
-        }
 
         [HttpPost("addBook")]
         public IActionResult AddNewBook([FromBody] BookDto bookDto)
         {
 
-            if (bookDto == null)
+            var isFound = context.Books.Any(s => s.Title == bookDto.Title && s.AuthorName == bookDto.AuthorName);
+
+            if (isFound == true)
             {
-                return BadRequest("Error");
+                return BadRequest("The book already exists in the system");
             }
 
-            //var book = this.AddBook(bookDto);
+
             var book = new Book()
             {
                 Title = bookDto.Title,
                 AuthorName = bookDto.AuthorName,
-                IsBorrowed = bookDto.IsBorrowed,
+                IsBorrowed = false,
                 ImageUrl = bookDto.ImageUrl,
                 Subject = bookDto.Subject,
-                PublishYear = bookDto.PublishYear
-            };
-            var borrow = new Borrow()
-            {
-               UserId=2,
-               BookId=51,
-               ExpDate=DateTime.Now
+                PublishYear = bookDto.PublishYear,
+                Language = bookDto.Language,
+                Genre = bookDto.Genre
+
             };
 
             bookDto.Id = book.Id;
-            //BorrowDto borrowDto = new BorrowDto();
-            //borrow.Id = borrowDto.Id;
 
 
             try
-            { 
-            //context.Books.Add(book);
-             context.Borrows.Add(borrow);
-                context.SaveChangesAsync();
+            {
+                context.Books.Add(book);
+                context.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -136,6 +95,7 @@ namespace ArdLibrary.Controller
             return Ok(bookDto);
 
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
