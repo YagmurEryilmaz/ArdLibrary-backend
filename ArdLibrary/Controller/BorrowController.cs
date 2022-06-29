@@ -13,6 +13,7 @@ namespace ArdLibrary.Controller
 	public class BorrowController:BaseController
 	{
         private readonly DataContext context;
+       
         public BorrowController(DataContext context)
         {
             this.context = context;
@@ -20,7 +21,7 @@ namespace ArdLibrary.Controller
 
         private Borrow AddToBorrowed(BorrowAddDto borrowDto)
         {
-            var isBorrowed =  context.Borrows.Any(s=> s.ExpDate > DateTime.Now.AddDays(-2) && s.BookId == borrowDto.BookId && s.UserId == borrowDto.UserId);
+            var isBorrowed =  context.Borrows.Any(s=> s.ExpDate > DateTime.Now.AddDays(-7) && s.BookId == borrowDto.BookId && s.UserId == borrowDto.UserId);
 
             if (isBorrowed == true)
             {
@@ -55,7 +56,7 @@ namespace ArdLibrary.Controller
         [HttpPost]
         public IActionResult AddBorrowedBook([FromBody] BorrowAddDto borrowAddDto)
         {
-            var count = context.Borrows.Count(r => r.UserId == borrowAddDto.UserId && r.ExpDate > DateTime.Now.AddDays(-2));
+            var count = context.Borrows.Count(r => r.UserId == borrowAddDto.UserId && r.ExpDate > DateTime.Now.AddDays(-7));
 
             if (count >= 5)
             {
@@ -98,7 +99,7 @@ namespace ArdLibrary.Controller
         [HttpGet("GetPrevBorrowedBooksById/{id}")]
         public async Task<ActionResult<List<Borrow>>> GetPrevBooksById(int id)
         {
-            var prevBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate< DateTime.Now.AddDays(-2)).Include(x => x.Book).Include(x => x.User).ToListAsync();
+            var prevBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate< DateTime.Now.AddDays(-7)).Include(x => x.Book).Include(x => x.User).ToListAsync();
             foreach (var book in prevBorrowedBooksList)
             {
                 book.Book.IsBorrowed = false;
@@ -114,14 +115,14 @@ namespace ArdLibrary.Controller
         [HttpGet("GetBorrowDate/{id}")]
         public async Task<ActionResult<List<DateTime>>> GetBorrrowDate(int id)
         {
-            var prevBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate < DateTime.Now.AddDays(-2)).Select(e => e.ExpDate.AddDays(+3).ToLocalTime()).ToListAsync();
+            var prevBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate < DateTime.Now.AddDays(-7)).Select(e => e.ExpDate.AddDays(+8).ToLocalTime()).ToListAsync();
             return prevBorrowedBooksList;
         }
 
         [HttpGet("GetRealExpDate/{id}")]
         public async Task<ActionResult<List<DateTime>>> GetRealExpDate(int id)
         {
-            var currBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate > DateTime.Now.AddDays(-2)).Select(e => e.ExpDate.AddDays(+7).ToLocalTime()).ToListAsync();
+            var currBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate > DateTime.Now.AddDays(-7)).Select(e => e.ExpDate.AddDays(+7).ToLocalTime()).ToListAsync();
             return currBorrowedBooksList;
         }
 
@@ -129,7 +130,7 @@ namespace ArdLibrary.Controller
         [HttpGet("GetCurrentlyBorrowedBooksById/{id}")]
         public async Task<ActionResult<List<Borrow>>> GetCurrentBooksById(int id)
         {
-            var currBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate > DateTime.Now.AddDays(-2)).Include(x => x.Book).Include(x => x.User).ToListAsync();
+            var currBorrowedBooksList = await context.Borrows.Where(b => b.UserId == id && b.ExpDate > DateTime.Now.AddDays(-7)).Include(x => x.Book).Include(x => x.User).ToListAsync();
             foreach (var book in currBorrowedBooksList)
             {
                 book.Book.IsBorrowed = true;
@@ -156,7 +157,7 @@ namespace ArdLibrary.Controller
 
             var book = context.Books.FirstOrDefault(b => b.Id == id);
             book.IsBorrowed = false;
-            borrow.ExpDate = DateTime.Now.AddDays(-3);
+            borrow.ExpDate = DateTime.Now.AddDays(-8);
 
             context.Books.Update(book);
             context.Borrows.Update(borrow);

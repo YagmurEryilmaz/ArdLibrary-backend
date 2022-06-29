@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ArdLibrary.Entities;
 using Microsoft.OpenApi.Models;
-
+using System.Configuration;
 
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
