@@ -91,32 +91,6 @@ namespace ArdLibrary.Migrations
                     b.ToTable("Borrows");
                 });
 
-            modelBuilder.Entity("ArdLibrary.Entities.PrevBorrow", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ExpDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PrevBorrows");
-                });
-
             modelBuilder.Entity("ArdLibrary.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -137,31 +111,16 @@ namespace ArdLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ArdLibrary.Entities.Borrow", b =>
-                {
-                    b.HasOne("ArdLibrary.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ArdLibrary.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ArdLibrary.Entities.PrevBorrow", b =>
                 {
                     b.HasOne("ArdLibrary.Entities.Book", "Book")
                         .WithMany()

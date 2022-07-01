@@ -11,10 +11,10 @@ namespace ArdLibrary.Entities
        
 
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
 
         [ForeignKey("BookId")]
-        public virtual Book Book { get; set; }
+        public virtual Book? Book { get; set; }
 
     }
 }

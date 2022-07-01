@@ -9,7 +9,7 @@ namespace ArdLibrary.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookController
+    public class BookController:BaseController
     {
         private readonly DataContext context;
         public BookController(DataContext context)
@@ -28,7 +28,6 @@ namespace ArdLibrary.Controller
         public async Task<ActionResult<Book>> GetBookById(int id)
         {
             var book = await context.Books.FindAsync(id);
-
 
             return book;
         }
@@ -54,20 +53,79 @@ namespace ArdLibrary.Controller
             return result;
         }
 
+
+        [HttpPost("addBook")]
+        public IActionResult AddNewBook([FromBody] BookDto bookDto)
+        {
+
+            var isFound = context.Books.Any(s => s.Title == bookDto.Title && s.AuthorName == bookDto.AuthorName);
+
+            if (isFound == true)
+            {
+                return BadRequest("The book already exists in the system");
+            }
+
+
+            var book = new Book()
+            {
+                Title = bookDto.Title,
+                AuthorName = bookDto.AuthorName,
+                IsBorrowed = false,
+                ImageUrl = bookDto.ImageUrl,
+                Subject = bookDto.Subject,
+                PublishYear = bookDto.PublishYear,
+                Language = bookDto.Language,
+                Genre = bookDto.Genre
+
+            };
+
+            bookDto.Id = book.Id;
+
+
+            try
+            {
+                context.Books.Add(book);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return Ok(bookDto);
+
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+
+            var book = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                 context.Books.Remove(book);
+
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+
+            }
+        
+            return NoContent();
+
+        }
+
+
     }
-
-
-    //[HttpGet("getBorrowedBooks/{id}")]
-    //public async Task<ActionResult<List<Borrow>>> getBorrowedBooks(int id)
-    //{
-    //    var borrowedBooks = await context.Books
-    //    //    .Where(e => e.Id == id)
-    //    //    .Include(x => x.User)
-    //    //    .Select(x => x.Title)
-    //    //    .OrderBy(x => x.Order).ToListAsync();
-    //    //return titles;
-    //}
-
 
 }
 

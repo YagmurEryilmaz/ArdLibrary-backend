@@ -26,7 +26,7 @@ namespace ArdLibrary.Controller
             this.configuration = configuration;
             this.context = context;
 		}
-
+         
         [AllowAnonymous]
         [HttpPost]
         public ActionResult<LoginResponseDto> Login(LoginDto loginDto)
@@ -46,13 +46,6 @@ namespace ArdLibrary.Controller
 
         }
 
-        [HttpGet("getTest")]
-        public IActionResult getTest ()
-        {
-
-            return Ok();
-
-        }
 
     }
 }

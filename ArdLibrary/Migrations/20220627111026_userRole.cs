@@ -5,18 +5,35 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ArdLibrary.Migrations
 {
-    public partial class prewBorrow : Migration
+    public partial class userRole : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "PrevBorrows");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Role",
+                table: "Users",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "Role",
+                table: "Users");
+
             migrationBuilder.CreateTable(
                 name: "PrevBorrows",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     BookId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     ExpDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -45,12 +62,6 @@ namespace ArdLibrary.Migrations
                 name: "IX_PrevBorrows_UserId",
                 table: "PrevBorrows",
                 column: "UserId");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "PrevBorrows");
         }
     }
 }

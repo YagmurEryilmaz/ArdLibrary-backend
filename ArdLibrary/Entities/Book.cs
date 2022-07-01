@@ -5,7 +5,7 @@ namespace ArdLibrary.Entities
     public class Book
     {
         
-        [Key] // otomatik olarak identity yapmak için
+        [Key] 
         public int Id { get; set; }
         public string Title { get; set; }
         public string AuthorName { get; set; }

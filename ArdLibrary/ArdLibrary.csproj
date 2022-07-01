@@ -28,6 +28,7 @@
     <None Remove="Swashbuckle.AspNetCore.Swagger" />
     <None Remove="System.IdentityModel.Tokens.Jwt" />
     <None Remove="Microsoft.AspNetCore.Authentication" />
+    <None Remove="MailKit" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
@@ -55,5 +56,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="MailKit" Version="3.3.0" />
   </ItemGroup>
 </Project>
